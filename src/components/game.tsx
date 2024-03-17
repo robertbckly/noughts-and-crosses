@@ -9,6 +9,12 @@ type Board = {
 
 const SIZE = 3;
 const FIRST_PLAYER: Player = '0';
+const INIT_SCORING = {
+  rows: [0, 0, 0],
+  cols: [0, 0, 0],
+  posDiagonal: 0,
+  negDiagonal: 0,
+};
 
 function createInitialBoard(): Board {
   const board: Partial<Board> = {};
@@ -59,8 +65,6 @@ export function Game() {
 
     const newScoring = { ...scoring };
 
-    // TODO: scoring doesn't work
-
     // Cols and rows
     newScoring.cols[col] += playerValue;
     newScoring.rows[row] += playerValue;
@@ -102,6 +106,7 @@ export function Game() {
     setBoard(createInitialBoard());
     setPlayer(FIRST_PLAYER);
     setWinner(null);
+    setScoring(INIT_SCORING);
   }
 
   return (
