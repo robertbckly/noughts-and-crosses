@@ -36,12 +36,9 @@ export function Game() {
   const [player, setPlayer] = useState<Player>(FIRST_PLAYER);
   const [winner, setWinner] = useState<Player | null>(null);
 
-  const [scoring, setScoring] = useState({
-    rows: [0, 0, 0],
-    cols: [0, 0, 0],
-    posDiagonal: 0,
-    negDiagonal: 0,
-  });
+  const [scoring, setScoring] = useState(structuredClone(INIT_SCORING));
+
+  console.log(scoring);
 
   // It's a new game if there are no squares with a truthy value
   const isNewGame = !Object.entries(board).find(([, square]) => square.value);
@@ -106,7 +103,7 @@ export function Game() {
     setBoard(createInitialBoard());
     setPlayer(FIRST_PLAYER);
     setWinner(null);
-    setScoring(INIT_SCORING);
+    setScoring(structuredClone(INIT_SCORING));
   }
 
   return (
@@ -138,6 +135,9 @@ export function Game() {
           Reset
         </button>
       </aside>
+
+      {/* TODO: include this somewhere */}
+      <p>{!winner && checkGameOver(board) && 'Game over :-('}</p>
     </div>
   );
 }
