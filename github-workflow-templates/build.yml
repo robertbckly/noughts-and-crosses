@@ -1,0 +1,29 @@
+name: Build
+
+on:
+  workflow_call:
+    inputs:
+      build-command:
+        description: npm command to run build
+        required: false
+        type: string
+        default: build
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+      - name: Install dependencies
+        run: npm ci
+      - name: Run build
+        run: npm run ${{ inputs.build-command }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: INSERT-ARTIFACT-NAME-HERE
+          path: dist
+          overwrite: true
