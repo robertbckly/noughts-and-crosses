@@ -27,6 +27,11 @@ function createInitialBoard(): Board {
   return board as Board;
 }
 
+function getCoordsFromIndex(index: number): [number, number] {
+  // [row, col]
+  return [index % SIZE, Math.floor(index / SIZE)];
+}
+
 function checkGameOver(board: Board): boolean {
   return Object.entries(board).every(([, square]) => square.value);
 }
@@ -35,13 +40,11 @@ export function Game() {
   const [board, setBoard] = useState<Board>(createInitialBoard());
   const [player, setPlayer] = useState<Player>(FIRST_PLAYER);
   const [winner, setWinner] = useState<Player | null>(null);
-
   const [scoring, setScoring] = useState(structuredClone(INIT_SCORING));
-
-  console.log(scoring);
 
   // It's a new game if there are no squares with a truthy value
   const isNewGame = !Object.entries(board).find(([, square]) => square.value);
+  const isGameOver = checkGameOver(board);
 
   function handleSquareClick(index: keyof Board) {
     // Fail-safe
@@ -56,8 +59,7 @@ export function Game() {
 
     setBoard(newBoard);
 
-    const col = index % SIZE;
-    const row = Math.floor(index / SIZE);
+    const [col, row] = getCoordsFromIndex(index);
     const playerValue = player === '0' ? -1 : 1;
 
     const newScoring = { ...scoring };
@@ -114,9 +116,10 @@ export function Game() {
             key={key}
             type="button"
             onClick={() => handleSquareClick(Number(key))}
-            disabled={Boolean(square.value)}
-            // TODO: use coordinate in a11y label
-            aria-label={`Square ${key}: ${square.value}`}
+            disabled={Boolean(square.value || winner)}
+            aria-label={`Square 
+              ${getCoordsFromIndex(Number(key))}:
+              ${square.value || 'empty'}`}
             // TODO: support dynamic width based on `SIZE`
             className="aspect-square w-1/3 flex-shrink-0 border border-black bg-white text-4xl font-bold"
           >
@@ -125,7 +128,10 @@ export function Game() {
         ))}
       </main>
       <aside className="mt-4 flex items-center">
-        <p>{winner ? `Winner: ${winner}` : `It's ${player}'s go`}</p>
+        {!winner && !isGameOver && `It's ${player}'s go`}
+        {!winner && isGameOver && 'Game over :-('}
+        {!!winner && `Winner: ${winner}`}
+
         <button
           type="button"
           onClick={handleReset}
@@ -135,9 +141,6 @@ export function Game() {
           Reset
         </button>
       </aside>
-
-      {/* TODO: include this somewhere */}
-      <p>{!winner && checkGameOver(board) && 'Game over :-('}</p>
     </div>
   );
 }
