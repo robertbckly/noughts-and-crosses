@@ -1,30 +1,19 @@
 import { useState } from 'react';
 
 type Player = '0' | 'X';
-type Board = {
-  [Key: number]: {
-    value: Player | null;
-  };
-};
+type Board = (Player | null)[];
 
 const SIZE = 3;
 const FIRST_PLAYER: Player = '0';
 const INIT_SCORING = {
-  rows: [0, 0, 0],
-  cols: [0, 0, 0],
+  rows: Array<number>(SIZE).fill(0),
+  cols: Array<number>(SIZE).fill(0),
   posDiagonal: 0,
   negDiagonal: 0,
 };
 
 function createInitialBoard(): Board {
-  const board: Partial<Board> = {};
-
-  for (let i = 0; i < SIZE * SIZE; i += 1) {
-    board[i] = { value: null };
-  }
-
-  // TODO: don't like this type assertion
-  return board as Board;
+  return Array<Board[number]>(SIZE * SIZE).fill(null);
 }
 
 function getCoordsFromIndex(index: number): [number, number] {
@@ -33,7 +22,7 @@ function getCoordsFromIndex(index: number): [number, number] {
 }
 
 function checkGameOver(board: Board): boolean {
-  return Object.entries(board).every(([, square]) => square.value);
+  return board.every(Boolean);
 }
 
 export function Game() {
@@ -43,43 +32,42 @@ export function Game() {
   const [scoring, setScoring] = useState(structuredClone(INIT_SCORING));
 
   // It's a new game if there are no squares with a truthy value
-  const isNewGame = !Object.entries(board).find(([, square]) => square.value);
+  const isNewGame = !board.find(Boolean);
   const isGameOver = checkGameOver(board);
 
-  function handleSquareClick(index: keyof Board) {
+  function handleMove(index: number) {
     // Fail-safe
-    if (board[index]?.value || winner) {
+    if (board[index] || winner) {
       return;
     }
 
-    const newBoard = {
-      ...board,
-      [index]: { ...board[index], value: player },
-    };
-
+    // Add move to board
+    const newBoard = [...board];
+    newBoard[index] = player;
     setBoard(newBoard);
 
+    // Calculate scoring
+    const newScoring = structuredClone(scoring);
     const [col, row] = getCoordsFromIndex(index);
     const playerValue = player === '0' ? -1 : 1;
 
-    const newScoring = { ...scoring };
-
-    // Cols and rows
+    // ... cols and rows
     newScoring.cols[col] += playerValue;
     newScoring.rows[row] += playerValue;
 
-    // Positive diagonal
+    // ... positive diagonal
     if (col === row) {
       newScoring.posDiagonal += playerValue;
     }
 
-    // Negative diagonal
+    // ... negative diagonal
     if (SIZE - col - 1 === row) {
       newScoring.negDiagonal += playerValue;
     }
 
     setScoring(newScoring);
 
+    // Check for winner
     if (
       Math.abs(newScoring.cols[col] || 0) === SIZE ||
       Math.abs(newScoring.rows[row] || 0) === SIZE ||
@@ -87,12 +75,10 @@ export function Game() {
       Math.abs(newScoring.negDiagonal) === SIZE
     ) {
       setWinner(player);
+      return;
     }
 
-    // TODO: is there a 'cheaper' way of calculating the following...
-    // given the logic above?
-    // ...
-    // If game-over, end game
+    // If no winner, check if game over
     if (checkGameOver(newBoard)) {
       return;
     }
@@ -111,19 +97,20 @@ export function Game() {
   return (
     <div className="m-4">
       <main className="flex flex-wrap border border-black bg-black">
-        {Object.entries(board).map(([key, square]) => (
+        {board.map((square, key) => (
           <button
+            // eslint-disable-next-line react/no-array-index-key
             key={key}
             type="button"
-            onClick={() => handleSquareClick(Number(key))}
-            disabled={Boolean(square.value || winner)}
+            onClick={() => handleMove(Number(key))}
+            disabled={Boolean(square || winner)}
             aria-label={`Square 
               ${getCoordsFromIndex(Number(key))}:
-              ${square.value || 'empty'}`}
-            // TODO: support dynamic width based on `SIZE`
-            className="aspect-square w-1/3 flex-shrink-0 border border-black bg-white text-4xl font-bold"
+              ${square || 'empty'}`}
+            className="aspect-square flex-shrink-0 border border-black bg-white text-4xl font-bold"
+            style={{ width: `${(1 / SIZE) * 100}%` }}
           >
-            {square.value}
+            {square}
           </button>
         ))}
       </main>
