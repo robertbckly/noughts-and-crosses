@@ -36,7 +36,7 @@ export function useGameLogic() {
     // Calculate scoring
     const newScoring = structuredClone(scoring);
     const [col, row] = getCoordsFromIndex(index);
-    const playerValue = player === '0' ? -1 : 1;
+    const playerValue = player === PLAYERS[0] ? -1 : 1;
 
     // ... cols and rows
     newScoring.cols[col] += playerValue;
