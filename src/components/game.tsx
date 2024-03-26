@@ -15,7 +15,7 @@ export function Game() {
 
   return (
     <div className="m-4">
-      <main className="flex flex-wrap border border-black bg-black">
+      <main className="flex flex-wrap border border-black">
         {board.map((square, index) => (
           <button
             // Board squares will never change position in array.
