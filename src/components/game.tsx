@@ -14,8 +14,8 @@ export function Game() {
   } = useGameLogic();
 
   return (
-    <div className="m-4">
-      <main className="flex flex-wrap border border-black">
+    <div className="m-auto max-w-lg p-4">
+      <main className="flex flex-wrap border border-white">
         {board.map((square, index) => (
           <button
             // Board squares will never change position in array.
@@ -27,7 +27,7 @@ export function Game() {
             aria-label={`Square 
               ${getCoordsFromIndex(Number(index))}:
               ${square || 'empty'}`}
-            className="aspect-square flex-shrink-0 overflow-hidden border border-black bg-white text-4xl font-bold"
+            className="aspect-square flex-shrink-0 overflow-hidden border border-white text-4xl font-bold"
             style={{ width: `${(1 / SIZE) * 100}%` }}
           >
             {square}
@@ -35,15 +35,19 @@ export function Game() {
         ))}
       </main>
       <aside className="mt-4 flex items-center">
-        {!winner && !isGameOver && `It's ${player}'s go`}
-        {!winner && isGameOver && 'Game over :-('}
-        {!!winner && `Winner: ${winner}`}
+        <p className="text-lg font-bold">
+          {!winner && !isGameOver && `It's ${player}'s go`}
+          {!winner && isGameOver && 'Game over :-('}
+          {!!winner && (
+            <span className="animate-pulse">{`Winner: ${winner}`}</span>
+          )}
+        </p>
 
         <button
           type="button"
           onClick={handleReset}
           disabled={isNewGame}
-          className="ml-auto rounded-md bg-gray-200 px-4 py-2 disabled:opacity-50"
+          className="ml-auto rounded-md bg-white px-4 py-2 text-black disabled:opacity-50"
         >
           Reset
         </button>
