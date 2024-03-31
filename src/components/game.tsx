@@ -2,11 +2,17 @@ import { SIZE } from '../constants/constants';
 import { useGameLogic } from '../hooks/use-game-logic';
 import { getCoordsFromIndex } from '../utils/utils';
 
+/**
+ * TODO:
+ * Adapt winner info logic to provide x3 indexes to simplify rendering
+ * the winning squares, i.e. line.
+ */
+
 export function Game() {
   const {
     board,
     player,
-    winner,
+    winnerInfo,
     isNewGame,
     isGameOver,
     handleMove,
@@ -23,12 +29,15 @@ export function Game() {
             key={index}
             type="button"
             onClick={() => handleMove(Number(index))}
-            disabled={Boolean(square || winner)}
+            disabled={Boolean(square || winnerInfo)}
             aria-label={`Square 
               ${getCoordsFromIndex(Number(index))}:
               ${square || 'empty'}`}
             className="aspect-square flex-shrink-0 overflow-hidden border border-white text-4xl font-bold"
-            style={{ width: `${(1 / SIZE) * 100}%` }}
+            style={{
+              width: `${(1 / SIZE) * 100}%`,
+              backgroundColor: index % 2 === 0 ? 'cyan' : undefined,
+            }}
           >
             {square}
           </button>
@@ -36,10 +45,10 @@ export function Game() {
       </main>
       <aside className="mt-4 flex items-center">
         <p className="text-lg font-bold">
-          {!winner && !isGameOver && `It's ${player}'s go`}
-          {!winner && isGameOver && 'Game over :-('}
-          {!!winner && (
-            <span className="animate-pulse">{`Winner: ${winner}`}</span>
+          {!winnerInfo && !isGameOver && `It's ${player}'s go`}
+          {!winnerInfo && isGameOver && 'Game over :-('}
+          {!!winnerInfo && (
+            <span className="animate-pulse">{`Winner: ${winnerInfo.player}`}</span>
           )}
         </p>
 

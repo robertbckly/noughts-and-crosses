@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Board, Player } from '../types/types';
+import { Board, Player, WinnerInfo } from '../types/types';
 import {
   FIRST_PLAYER,
   INIT_SCORING,
@@ -13,14 +13,14 @@ export function useGameLogic() {
   const [player, setPlayer] = useState<Player>(FIRST_PLAYER);
   const [turn, setTurn] = useState(0);
   const [scoring, setScoring] = useState(structuredClone(INIT_SCORING));
-  const [winner, setWinner] = useState<Player | null>(null);
+  const [winnerInfo, setWinnerInfo] = useState<WinnerInfo | null>(null);
 
   const isNewGame = turn === 0;
   const isGameOver = turn === SIZE * SIZE;
 
   function handleMove(index: number) {
     // Fail-safe
-    if (board[index] || winner) {
+    if (board[index] || winnerInfo) {
       return;
     }
 
@@ -54,14 +54,31 @@ export function useGameLogic() {
 
     setScoring(newScoring);
 
-    // Check for winner
-    if (
-      Math.abs(newScoring.cols[col] || 0) === SIZE ||
-      Math.abs(newScoring.rows[row] || 0) === SIZE ||
-      Math.abs(newScoring.posDiagonal) === SIZE ||
-      Math.abs(newScoring.negDiagonal) === SIZE
-    ) {
-      setWinner(player);
+    // Check for winner and calculate info...
+
+    const rowWin = Math.abs(newScoring.rows[row] || 0) === SIZE;
+    const colWin = Math.abs(newScoring.cols[col] || 0) === SIZE;
+    const posDiagWin = Math.abs(newScoring.posDiagonal) === SIZE;
+    const negDiagWin = Math.abs(newScoring.negDiagonal) === SIZE;
+
+    const winLineType =
+      (rowWin && 'row') ||
+      (colWin && 'col') ||
+      (posDiagWin && 'diag') ||
+      (negDiagWin && 'diag');
+
+    // eslint-disable-next-line no-nested-ternary
+    const winLineIndex = rowWin ? row : colWin ? col : posDiagWin ? 0 : 1;
+
+    // Winner
+    if (winLineType && typeof winLineIndex === 'number') {
+      setWinnerInfo({
+        player,
+        line: {
+          type: winLineType,
+          index: winLineIndex,
+        },
+      });
       return;
     }
 
@@ -79,12 +96,12 @@ export function useGameLogic() {
     setPlayer(FIRST_PLAYER);
     setTurn(0);
     setScoring(structuredClone(INIT_SCORING));
-    setWinner(null);
+    setWinnerInfo(null);
   }
 
   return {
     board,
-    winner,
+    winnerInfo,
     player,
     isNewGame,
     isGameOver,
