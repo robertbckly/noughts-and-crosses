@@ -4,8 +4,10 @@ import { getCoordsFromIndex } from '../utils/utils';
 
 /**
  * TODO:
- * Adapt winner info logic to provide x3 indexes to simplify rendering
- * the winning squares, i.e. line.
+ * Refactor positive/negative diagonal code such that it's the type, and
+ * I'm not relying on index being 0 or 1 to denote positive or negative.
+ *
+ * Refactor `getIndexesInWinningLine()`
  */
 
 export function Game() {
@@ -20,30 +22,8 @@ export function Game() {
   } = useGameLogic();
 
   return (
-    <div className="m-auto max-w-lg p-4">
-      <main className="flex flex-wrap border border-white">
-        {board.map((square, index) => (
-          <button
-            // Board squares will never change position in array.
-            // eslint-disable-next-line react/no-array-index-key
-            key={index}
-            type="button"
-            onClick={() => handleMove(Number(index))}
-            disabled={Boolean(square || winnerInfo)}
-            aria-label={`Square 
-              ${getCoordsFromIndex(Number(index))}:
-              ${square || 'empty'}`}
-            className="aspect-square flex-shrink-0 overflow-hidden border border-white text-4xl font-bold"
-            style={{
-              width: `${(1 / SIZE) * 100}%`,
-              backgroundColor: index % 2 === 0 ? 'cyan' : undefined,
-            }}
-          >
-            {square}
-          </button>
-        ))}
-      </main>
-      <aside className="mt-4 flex items-center">
+    <div className="m-auto h-full max-w-lg p-4">
+      <aside className="mb-8 mt-4 flex items-start">
         <p className="text-lg font-bold">
           {!winnerInfo && !isGameOver && `It's ${player}'s go`}
           {!winnerInfo && isGameOver && 'Game over :-('}
@@ -61,6 +41,31 @@ export function Game() {
           Reset
         </button>
       </aside>
+      <main className="flex flex-wrap border border-white">
+        {board.map((square, index) => (
+          <button
+            // Board squares will never change position in array.
+            // eslint-disable-next-line react/no-array-index-key
+            key={index}
+            type="button"
+            onClick={() => handleMove(Number(index))}
+            disabled={Boolean(square || winnerInfo)}
+            aria-label={`Square 
+              ${getCoordsFromIndex(Number(index))}:
+              ${square || 'empty'}`}
+            className="aspect-square flex-shrink-0 overflow-hidden border border-white font-bold transition-colors"
+            style={{
+              width: `${(1 / SIZE) * 100}%`,
+              fontSize: `${10 / SIZE}rem`,
+              backgroundColor: winnerInfo?.line.squareIndexes.includes(index)
+                ? 'rgb(100, 125, 255)'
+                : undefined,
+            }}
+          >
+            {square}
+          </button>
+        ))}
+      </main>
     </div>
   );
 }

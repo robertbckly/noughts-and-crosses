@@ -6,7 +6,11 @@ import {
   PLAYERS,
   SIZE,
 } from '../constants/constants';
-import { createInitialBoard, getCoordsFromIndex } from '../utils/utils';
+import {
+  createInitialBoard,
+  getCoordsFromIndex,
+  getIndexesInWinningLine,
+} from '../utils/utils';
 
 export function useGameLogic() {
   const [board, setBoard] = useState<Board>(createInitialBoard());
@@ -76,7 +80,10 @@ export function useGameLogic() {
         player,
         line: {
           type: winLineType,
-          index: winLineIndex,
+          squareIndexes: getIndexesInWinningLine({
+            lineType: winLineType,
+            lineIndex: winLineIndex,
+          }),
         },
       });
       return;
