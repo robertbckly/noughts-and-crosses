@@ -33,8 +33,8 @@ export function Game() {
 
   return (
     <div className="m-auto h-full max-w-lg p-4">
-      <aside className="mb-8 mt-4 flex items-center">
-        <p className="text-2xl font-bold">
+      <aside className="mb-8 mt-4 flex items-center gap-2">
+        <p className="break-keep text-2xl font-bold">
           {!winnerInfo && !isGameOver && `It's ${player}'s go`}
           {!winnerInfo && isGameOver && 'Game over :-('}
           {!!winnerInfo && (
