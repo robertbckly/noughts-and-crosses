@@ -50,7 +50,7 @@ export function Game() {
       </aside>
       <main
         ref={boardRef}
-        className="relative flex flex-wrap overflow-hidden border-2 border-white"
+        className="relative flex flex-wrap overflow-hidden rounded-sm border-2 border-white"
       >
         <WinLine
           winnerInfo={winnerInfo}
