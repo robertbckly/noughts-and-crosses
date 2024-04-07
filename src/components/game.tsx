@@ -70,7 +70,7 @@ export function Game() {
               width: `${(1 / SIZE) * 100}%`,
               fontSize: `${squareSize * 0.8}px`,
               backgroundColor: winnerInfo?.line.squareIndexes.includes(index)
-                ? 'rgb(100, 125, 255)'
+                ? 'rgb(90, 210, 110)'
                 : undefined,
             }}
           >
