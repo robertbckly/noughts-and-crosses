@@ -10,6 +10,7 @@ export type WinnerInfo = {
   player: Player;
   line: {
     type: Line;
+    index: number;
     squareIndexes: number[];
   };
 };

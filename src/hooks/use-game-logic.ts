@@ -81,6 +81,7 @@ export function useGameLogic() {
         player,
         line: {
           type: winLineType,
+          index: winLineIndex,
           squareIndexes: getIndexesInWinningLine({
             lineType: winLineType,
             lineIndex: winLineIndex,
