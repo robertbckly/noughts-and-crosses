@@ -20,10 +20,10 @@ export function Game() {
   const [boardSize, setBoardSize] = useState(0);
   const [squareSize, setSquareSize] = useState(0);
   const boardRef = useRef<HTMLElement | null>(null);
-  const lastSquareRef = useRef<HTMLButtonElement | null>(null);
+  const firstSquareRef = useRef<HTMLButtonElement | null>(null);
   useElementSizeTracker({
     boardRef,
-    squareRef: lastSquareRef,
+    squareRef: firstSquareRef,
     onBoardSizeChange: setBoardSize,
     onSquareSizeChange: setSquareSize,
   });
@@ -59,9 +59,9 @@ export function Game() {
         />
         {board.map((square, index) => (
           <button
-            // Add ref to last square
-            ref={index === board.length - 1 ? lastSquareRef : undefined}
-            // Board squares will never change position in array.
+            // Add ref only to first square
+            ref={index === 0 ? firstSquareRef : undefined}
+            // Board squares will never change position in array (NOTE: unless board size is made dynamic).
             // eslint-disable-next-line react/no-array-index-key
             key={index}
             type="button"
