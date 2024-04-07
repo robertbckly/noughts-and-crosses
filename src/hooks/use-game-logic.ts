@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Board, Player, WinnerInfo } from '../types/types';
+import { Board, Line, Player, WinnerInfo } from '../types/types';
 import {
   FIRST_PLAYER,
   INIT_SCORING,
@@ -65,11 +65,12 @@ export function useGameLogic() {
     const posDiagWin = Math.abs(newScoring.posDiagonal) === SIZE;
     const negDiagWin = Math.abs(newScoring.negDiagonal) === SIZE;
 
-    const winLineType =
+    const winLineType: Line | null =
       (rowWin && 'row') ||
       (colWin && 'col') ||
-      (posDiagWin && 'diag') ||
-      (negDiagWin && 'diag');
+      (posDiagWin && 'diag-pos') ||
+      (negDiagWin && 'diag-neg') ||
+      null;
 
     // eslint-disable-next-line no-nested-ternary
     const winLineIndex = rowWin ? row : colWin ? col : posDiagWin ? 0 : 1;

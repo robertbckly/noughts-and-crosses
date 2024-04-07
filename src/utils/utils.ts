@@ -10,7 +10,6 @@ export function getCoordsFromIndex(index: number): [number, number] {
   return [index % SIZE, Math.floor(index / SIZE)];
 }
 
-// TODO: refactor
 export function getIndexesInWinningLine({
   lineType,
   lineIndex,
@@ -20,9 +19,7 @@ export function getIndexesInWinningLine({
 }): number[] {
   if (lineType === 'row') {
     const startIndex = lineIndex * SIZE;
-    return Array.from(Array(SIZE)).map(
-      (_, arrayIndex) => startIndex + arrayIndex,
-    );
+    return [...Array(SIZE)].map((_, arrayIndex) => startIndex + arrayIndex);
   }
 
   if (lineType === 'col') {
@@ -33,8 +30,7 @@ export function getIndexesInWinningLine({
     return indexes;
   }
 
-  // Positive diagonal
-  if (lineType === 'diag' && lineIndex === 0) {
+  if (lineType === 'diag-pos') {
     const indexes = [0];
     for (let i = 0; i < SIZE - 1; i += 1) {
       indexes.push(indexes[i]! + SIZE + 1);
@@ -42,8 +38,7 @@ export function getIndexesInWinningLine({
     return indexes;
   }
 
-  // Negative diagonal
-  if (lineType === 'diag' && lineIndex === 1) {
+  if (lineType === 'diag-neg') {
     const indexes = [SIZE - 1];
     for (let i = 0; i < SIZE - 1; i += 1) {
       indexes.push(indexes[i]! + SIZE - 1);
