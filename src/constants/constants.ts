@@ -7,3 +7,4 @@ export const INIT_SCORING = {
   posDiagonal: 0,
   negDiagonal: 0,
 };
+export const WIN_LINE_TRANSITION_DURATION = 0.4; // seconds
