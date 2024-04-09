@@ -1,9 +1,16 @@
-import { useRef, useState } from 'react';
-import { SIZE } from '../constants/constants';
-import { useGameLogic } from '../hooks/use-game-logic';
+import { useRef } from 'react';
+import { SIZE, BASE_TRANSITION_DURATION } from '../constants/constants';
 import { getCoordsFromIndex } from '../utils/utils';
 import { WinLine } from './win-line';
-import { useElementSizeTracker } from '../hooks/use-element-size-tracker';
+import { useElementSizes, useGameLogic } from '../hooks/hooks';
+
+/**
+ *
+ * TODO:
+ *  - Add light/dark mode toggle / inference (a11y)
+ *  - Add ARIA live (a11y)
+ *
+ */
 
 export function Game() {
   const {
@@ -17,15 +24,11 @@ export function Game() {
   } = useGameLogic();
 
   // Track board & square sizes in order to adjust font size
-  const [boardSize, setBoardSize] = useState(0);
-  const [squareSize, setSquareSize] = useState(0);
   const boardRef = useRef<HTMLElement | null>(null);
   const firstSquareRef = useRef<HTMLButtonElement | null>(null);
-  useElementSizeTracker({
+  const { boardSize, squareSize } = useElementSizes({
     boardRef,
     squareRef: firstSquareRef,
-    onBoardSizeChange: setBoardSize,
-    onSquareSizeChange: setSquareSize,
   });
 
   return (
@@ -35,7 +38,7 @@ export function Game() {
           {!winnerInfo && !isGameOver && `It's ${player}'s go`}
           {!winnerInfo && isGameOver && 'Game over :-('}
           {!!winnerInfo && (
-            <span className="animate-pulse">{`Winner: ${winnerInfo.player}`}</span>
+            <span className="animate-pulse motion-reduce:animate-none">{`Winner: ${winnerInfo.player}`}</span>
           )}
         </p>
 
@@ -61,7 +64,8 @@ export function Game() {
           <button
             // Add ref only to first square
             ref={index === 0 ? firstSquareRef : undefined}
-            // Board squares will never change position in array (NOTE: unless board size is made dynamic).
+            // Board squares will never change position in array
+            // (NOTE: unless board size is made dynamic)
             // eslint-disable-next-line react/no-array-index-key
             key={index}
             type="button"
@@ -70,13 +74,14 @@ export function Game() {
             aria-label={`Square 
               ${getCoordsFromIndex(Number(index))}:
               ${square || 'empty'}`}
-            className="aspect-square flex-shrink-0 overflow-hidden border-2 border-white font-bold leading-none transition-colors duration-200 ease-linear"
+            className="aspect-square flex-shrink-0 overflow-hidden border-2 border-white font-bold leading-none transition-colors ease-linear motion-reduce:transition-none"
             style={{
               width: `${(1 / SIZE) * 100}%`,
               fontSize: `${squareSize * 0.8}px`,
               backgroundColor: winnerInfo?.line.squareIndexes.includes(index)
                 ? 'rgb(90, 210, 110)'
                 : undefined,
+              transitionDuration: `${BASE_TRANSITION_DURATION / 3}ms`,
             }}
           >
             {square}

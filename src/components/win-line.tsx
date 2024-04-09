@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { useWinLinePositioner } from '../hooks/use-win-line-positioner';
+import { useWinLineAnimation } from '../hooks/use-win-line-animation';
 import { WinnerInfo } from '../types/types';
 
 export type WinLineProps = {
@@ -14,7 +14,7 @@ export type WinLineProps = {
  */
 export function WinLine({ squareSize, boardSize, winnerInfo }: WinLineProps) {
   const ref = useRef<HTMLDivElement | null>(null);
-  useWinLinePositioner({ ref, squareSize, boardSize, winnerInfo });
+  useWinLineAnimation({ ref, squareSize, boardSize, winnerInfo });
 
   return (
     <div

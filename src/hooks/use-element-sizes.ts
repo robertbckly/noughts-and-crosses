@@ -1,26 +1,22 @@
-import { MutableRefObject, useEffect } from 'react';
+import { MutableRefObject, useEffect, useState } from 'react';
 
-export type UseElementSizeTrackerArgs = {
+export type UseElementSizesArgs = {
   boardRef: MutableRefObject<HTMLElement | null>;
   squareRef: MutableRefObject<HTMLElement | null>;
-  onBoardSizeChange: (size: number) => void;
-  onSquareSizeChange: (size: number) => void;
 };
 
-export function useElementSizeTracker({
-  boardRef,
-  squareRef,
-  onBoardSizeChange,
-  onSquareSizeChange,
-}: UseElementSizeTrackerArgs) {
+export function useElementSizes({ boardRef, squareRef }: UseElementSizesArgs) {
+  const [boardSize, setBoardSize] = useState(0);
+  const [squareSize, setSquareSize] = useState(0);
+
   useEffect(() => {
     const resizeObserver = new ResizeObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.target === boardRef.current) {
-          onBoardSizeChange(entry.contentBoxSize[0]?.blockSize || 0);
+          setBoardSize(entry.contentBoxSize[0]?.blockSize || 0);
         }
         if (entry.target === squareRef.current) {
-          onSquareSizeChange(entry.contentBoxSize[0]?.blockSize || 0);
+          setSquareSize(entry.contentBoxSize[0]?.blockSize || 0);
         }
       });
     });
@@ -33,5 +29,7 @@ export function useElementSizeTracker({
     }
 
     return () => resizeObserver.disconnect();
-  }, [boardRef, onBoardSizeChange, onSquareSizeChange, squareRef]);
+  }, [boardRef, squareRef]);
+
+  return { boardSize, squareSize };
 }

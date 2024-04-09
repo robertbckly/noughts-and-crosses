@@ -1,20 +1,23 @@
 import { MutableRefObject, useEffect } from 'react';
 import { WinnerInfo } from '../types/types';
-import { WIN_LINE_TRANSITION_DURATION, SIZE } from '../constants/constants';
+import { BASE_TRANSITION_DURATION, SIZE } from '../constants/constants';
+import { useMotionSetting } from './use-motion-setting';
 
-export type UseWinLinePositionerArgs = {
+export type UseWinLineAnimationArgs = {
   ref: MutableRefObject<HTMLDivElement | null>;
   squareSize: number | null;
   boardSize: number | null;
   winnerInfo: WinnerInfo | null;
 };
 
-export function useWinLinePositioner({
+export function useWinLineAnimation({
   ref,
   squareSize,
   boardSize,
   winnerInfo,
-}: UseWinLinePositionerArgs) {
+}: UseWinLineAnimationArgs) {
+  const { motionDisabled } = useMotionSetting();
+
   useEffect(() => {
     const line = ref.current;
     if (!line || !squareSize || !boardSize) {
@@ -35,10 +38,12 @@ export function useWinLinePositioner({
 
     // Animation (duration is increased for longer diagonal)
     const duration = winnerInfo.line.type.includes('diag')
-      ? WIN_LINE_TRANSITION_DURATION * 1.42
-      : WIN_LINE_TRANSITION_DURATION;
+      ? BASE_TRANSITION_DURATION * 1.42
+      : BASE_TRANSITION_DURATION;
     line.style.width = `calc(100% - ${lineMarginX * 2}px`;
-    line.style.transition = `width ${duration}s ease-in-out`;
+    line.style.transition = !motionDisabled
+      ? `width ${duration}ms ease-in-out`
+      : '';
 
     // Position for row
     if (winnerInfo.line.type === 'row') {
@@ -71,5 +76,5 @@ export function useWinLinePositioner({
       line.style.left = `${boardSize + lineOffsetY - lineMarginX}px`;
       line.style.top = `${lineMarginX}px`;
     }
-  }, [boardSize, ref, squareSize, winnerInfo]);
+  }, [boardSize, motionDisabled, ref, squareSize, winnerInfo]);
 }
