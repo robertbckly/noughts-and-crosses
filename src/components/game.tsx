@@ -7,8 +7,9 @@ import { useAutoDarkMode, useElementSizes, useGameLogic } from '../hooks/hooks';
 /**
  *
  * TODO:
- *  - Add light/dark mode toggle / inference (a11y)
  *  - Add ARIA live (a11y)
+ *  - Add dark-mode override
+ *  - Add dynamic board size control (just for fun)
  *
  */
 
