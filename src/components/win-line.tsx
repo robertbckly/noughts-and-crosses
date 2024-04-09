@@ -21,7 +21,7 @@ export function WinLine({ squareSize, boardSize, winnerInfo }: WinLineProps) {
       ref={ref}
       aria-hidden
       // Starts with no width; animates when displayed
-      className="pointer-events-none absolute h-2 w-0 origin-top-left rounded-sm bg-white opacity-80 shadow-md"
+      className="pointer-events-none absolute h-2 w-0 origin-top-left rounded-sm bg-black opacity-80 shadow-md dark:bg-white"
       style={{
         visibility: winnerInfo ? 'visible' : 'hidden',
       }}

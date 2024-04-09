@@ -1,7 +1,7 @@
 import { MutableRefObject, useEffect } from 'react';
 import { WinnerInfo } from '../types/types';
 import { BASE_TRANSITION_DURATION, SIZE } from '../constants/constants';
-import { useMotionSetting } from './use-motion-setting';
+import { useMatchMedia } from './use-match-media';
 
 export type UseWinLineAnimationArgs = {
   ref: MutableRefObject<HTMLDivElement | null>;
@@ -16,7 +16,7 @@ export function useWinLineAnimation({
   boardSize,
   winnerInfo,
 }: UseWinLineAnimationArgs) {
-  const { motionDisabled } = useMotionSetting();
+  const motionDisabled = useMatchMedia('(prefers-reduced-motion)');
 
   useEffect(() => {
     const line = ref.current;

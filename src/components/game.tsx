@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import { SIZE, BASE_TRANSITION_DURATION } from '../constants/constants';
 import { getCoordsFromIndex } from '../utils/utils';
 import { WinLine } from './win-line';
-import { useElementSizes, useGameLogic } from '../hooks/hooks';
+import { useAutoDarkMode, useElementSizes, useGameLogic } from '../hooks/hooks';
 
 /**
  *
@@ -31,6 +31,8 @@ export function Game() {
     squareRef: firstSquareRef,
   });
 
+  useAutoDarkMode();
+
   return (
     <div className="m-auto h-full max-w-lg p-4">
       <aside className="mb-8 mt-4 flex items-center gap-2">
@@ -46,14 +48,14 @@ export function Game() {
           type="button"
           onClick={handleReset}
           disabled={isNewGame}
-          className="ml-auto rounded-md bg-white px-4 py-2 text-black disabled:opacity-50"
+          className="ml-auto rounded-md bg-black px-4 py-2 text-white disabled:opacity-50 dark:bg-white dark:text-black"
         >
           Reset
         </button>
       </aside>
       <main
         ref={boardRef}
-        className="relative flex flex-wrap overflow-hidden rounded-sm border-2 border-white"
+        className="relative flex flex-wrap overflow-hidden rounded-sm border-2 border-black dark:border-white"
       >
         <WinLine
           winnerInfo={winnerInfo}
@@ -74,7 +76,7 @@ export function Game() {
             aria-label={`Square 
               ${getCoordsFromIndex(Number(index))}:
               ${square || 'empty'}`}
-            className="aspect-square flex-shrink-0 overflow-hidden border-2 border-white font-bold leading-none transition-colors ease-linear motion-reduce:transition-none"
+            className="aspect-square flex-shrink-0 overflow-hidden border-2 border-black font-bold leading-none transition-colors ease-linear motion-reduce:transition-none dark:border-white dark:text-white"
             style={{
               width: `${(1 / SIZE) * 100}%`,
               fontSize: `${squareSize * 0.8}px`,
