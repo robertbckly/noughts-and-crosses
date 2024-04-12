@@ -6,8 +6,13 @@ export function createInitialBoard(): Board {
 }
 
 export function getCoordsFromIndex(index: number): [number, number] {
-  // [row, col]
+  // [col, row]
   return [index % SIZE, Math.floor(index / SIZE)];
+}
+
+export function getSquareLabel(index: number, value: string | null): string {
+  const [col, row] = getCoordsFromIndex(index);
+  return `Column ${col + 1}, Row ${row + 1}: ${value || 'empty'}`;
 }
 
 export function getIndexesInWinningLine({

@@ -1,13 +1,12 @@
 import { useRef } from 'react';
 import { SIZE, BASE_TRANSITION_DURATION } from '../constants/constants';
-import { getCoordsFromIndex } from '../utils/utils';
+import { getSquareLabel } from '../utils/utils';
 import { WinLine } from './win-line';
 import { useAutoDarkMode, useElementSizes, useGameLogic } from '../hooks/hooks';
 
 /**
  *
  * TODO:
- *  - Add ARIA live (a11y)
  *  - Add dark-mode override
  *  - Add dynamic board size control (just for fun)
  *  - Investigate random animation lag
@@ -39,7 +38,7 @@ export function Game() {
   return (
     <div className="m-auto h-full max-w-lg p-4">
       <aside className="mb-8 mt-4 flex items-center gap-2">
-        <p className="break-keep text-2xl font-bold">
+        <p role="alert" className="break-keep text-2xl font-bold">
           {!winnerInfo && !isGameOver && `It's ${player}'s go`}
           {!winnerInfo && isGameOver && 'Game over :-('}
           {!!winnerInfo && (
@@ -76,9 +75,7 @@ export function Game() {
             type="button"
             onClick={() => handleMove(Number(index))}
             disabled={Boolean(square || winnerInfo)}
-            aria-label={`Square 
-              ${getCoordsFromIndex(Number(index))}:
-              ${square || 'empty'}`}
+            aria-label={getSquareLabel(index, square)}
             className="aspect-square flex-shrink-0 overflow-hidden border-2 border-black font-bold leading-none transition-colors ease-linear motion-reduce:transition-none dark:border-white dark:text-white"
             style={{
               width: `${(1 / SIZE) * 100}%`,
