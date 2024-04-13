@@ -35,7 +35,10 @@ export function Game() {
 
   return (
     <div className="m-auto flex min-h-full max-w-lg flex-col gap-4 p-4">
-      <aside className="my-2 flex items-center justify-between gap-2">
+      <aside
+        aria-label="Info and reset"
+        className="my-2 flex items-center justify-between gap-2"
+      >
         <StatusMessage
           isGameOver={isGameOver}
           player={player}
@@ -46,6 +49,7 @@ export function Game() {
 
       <main
         ref={boardRef}
+        aria-label="Game"
         className="relative flex flex-wrap overflow-hidden rounded-sm border-2 border-black dark:border-white"
       >
         {board.map((value, index) => (
@@ -70,7 +74,7 @@ export function Game() {
         />
       </main>
 
-      <aside className="mt-auto flex justify-end">
+      <aside aria-label="Settings" className="mt-auto flex justify-end">
         <ThemeButton theme={theme} onChange={setTheme} />
       </aside>
     </div>
