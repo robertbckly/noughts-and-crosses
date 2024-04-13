@@ -2,16 +2,12 @@ import { useRef } from 'react';
 import { SIZE, BASE_TRANSITION_DURATION } from '../constants/constants';
 import { getSquareLabel } from '../utils/utils';
 import { WinLine } from './win-line';
-import { useAutoDarkMode, useElementSizes, useGameLogic } from '../hooks/hooks';
+import { useTheme, useElementSizes, useGameLogic } from '../hooks/hooks';
 
 /**
- *
  * TODO:
- *  - Add dark-mode override
  *  - Add dynamic board size control (just for fun)
- *  - Investigate random animation lag
  *  - Test in other browsers / OSs
- *
  */
 
 export function Game() {
@@ -33,11 +29,11 @@ export function Game() {
     squareRef: firstSquareRef,
   });
 
-  useAutoDarkMode();
+  const [theme, setTheme] = useTheme();
 
   return (
-    <div className="m-auto h-full max-w-lg p-4">
-      <aside className="mb-8 mt-4 flex items-center gap-2">
+    <div className="m-auto flex min-h-full max-w-lg flex-col gap-4 p-4">
+      <aside className="flex items-center justify-between gap-2">
         <p role="alert" className="break-keep text-2xl font-bold">
           {!winnerInfo && !isGameOver && `It's ${player}'s go`}
           {!winnerInfo && isGameOver && 'Game over :-('}
@@ -45,12 +41,11 @@ export function Game() {
             <span className="animate-pulse motion-reduce:animate-none">{`Winner: ${winnerInfo.player}`}</span>
           )}
         </p>
-
         <button
           type="button"
           onClick={handleReset}
           disabled={isNewGame}
-          className="ml-auto rounded-md bg-black px-4 py-2 text-white disabled:opacity-50 dark:bg-white dark:text-black"
+          className="rounded-md bg-black px-4 py-2 text-white disabled:opacity-50 dark:bg-white dark:text-black"
         >
           Reset
         </button>
@@ -76,7 +71,7 @@ export function Game() {
             onClick={() => handleMove(Number(index))}
             disabled={Boolean(square || winnerInfo)}
             aria-label={getSquareLabel(index, square)}
-            className="aspect-square flex-shrink-0 overflow-hidden border-2 border-black font-bold leading-none transition-colors ease-linear motion-reduce:transition-none dark:border-white dark:text-white"
+            className="aspect-square overflow-hidden border-2 border-black font-bold leading-none transition-colors ease-linear motion-reduce:transition-none dark:border-white dark:text-white"
             style={{
               width: `${(1 / SIZE) * 100}%`,
               fontSize: `${squareSize * 0.8}px`,
@@ -90,6 +85,17 @@ export function Game() {
           </button>
         ))}
       </main>
+      <aside className="mt-auto">
+        <button
+          type="button"
+          onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+          aria-label={theme === 'light' ? 'Use dark theme' : 'Use light theme'}
+          className="ml-auto flex items-center gap-2 p-2 text-sm leading-none opacity-70"
+        >
+          {theme === 'dark' ? 'Light' : 'Dark'}
+          <span className="h-4 w-4 rounded-full border-[0.2rem] border-black dark:border-white dark:bg-white" />
+        </button>
+      </aside>
     </div>
   );
 }
