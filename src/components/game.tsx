@@ -1,9 +1,8 @@
 import { useRef } from 'react';
-import { SIZE, BASE_TRANSITION_DURATION } from '../constants/constants';
-import { getSquareLabel } from '../utils/utils';
 import { WinLine } from './win-line';
 import { useTheme, useElementSizes, useGameLogic } from '../hooks/hooks';
 import { ThemeButton } from './theme-button';
+import { Square } from './square';
 
 /**
  * TODO:
@@ -60,30 +59,20 @@ export function Game() {
           boardSize={boardSize}
           squareSize={squareSize}
         />
-        {board.map((square, index) => (
-          <button
-            // Add ref only to first square
-            ref={index === 0 ? firstSquareRef : undefined}
+        {board.map((value, index) => (
+          <Square
             // Board squares will never change position in array
             // (NOTE: unless board size is made dynamic)
             // eslint-disable-next-line react/no-array-index-key
             key={index}
-            type="button"
-            onClick={() => handleMove(Number(index))}
-            disabled={Boolean(square || winnerInfo)}
-            aria-label={getSquareLabel(index, square)}
-            className="aspect-square overflow-hidden border-2 border-black font-bold leading-none transition-colors ease-linear motion-reduce:transition-none dark:border-white dark:text-white"
-            style={{
-              width: `${(1 / SIZE) * 100}%`,
-              fontSize: `${squareSize * 0.8}px`,
-              backgroundColor: winnerInfo?.line.squareIndexes.includes(index)
-                ? 'rgb(90, 210, 110)'
-                : undefined,
-              transitionDuration: `${BASE_TRANSITION_DURATION / 3}ms`,
-            }}
-          >
-            {square}
-          </button>
+            // Add ref only to first square
+            ref={index === 0 ? firstSquareRef : undefined}
+            index={index}
+            value={value}
+            pixelSize={squareSize}
+            winnerInfo={winnerInfo}
+            onClick={() => handleMove(index)}
+          />
         ))}
       </main>
       <aside className="mt-auto flex justify-end">
