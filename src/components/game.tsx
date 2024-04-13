@@ -3,6 +3,7 @@ import { SIZE, BASE_TRANSITION_DURATION } from '../constants/constants';
 import { getSquareLabel } from '../utils/utils';
 import { WinLine } from './win-line';
 import { useTheme, useElementSizes, useGameLogic } from '../hooks/hooks';
+import { ThemeButton } from './theme-button';
 
 /**
  * TODO:
@@ -33,7 +34,7 @@ export function Game() {
 
   return (
     <div className="m-auto flex min-h-full max-w-lg flex-col gap-4 p-4">
-      <aside className="flex items-center justify-between gap-2">
+      <aside className="my-2 flex items-center justify-between gap-2">
         <p role="alert" className="break-keep text-2xl font-bold">
           {!winnerInfo && !isGameOver && `It's ${player}'s go`}
           {!winnerInfo && isGameOver && 'Game over :-('}
@@ -85,16 +86,8 @@ export function Game() {
           </button>
         ))}
       </main>
-      <aside className="mt-auto">
-        <button
-          type="button"
-          onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-          aria-label={theme === 'light' ? 'Use dark theme' : 'Use light theme'}
-          className="ml-auto flex items-center gap-2 p-2 text-sm leading-none opacity-70"
-        >
-          {theme === 'dark' ? 'Light' : 'Dark'}
-          <span className="h-4 w-4 rounded-full border-[0.2rem] border-black dark:border-white dark:bg-white" />
-        </button>
+      <aside className="mt-auto flex justify-end">
+        <ThemeButton theme={theme} onChange={setTheme} />
       </aside>
     </div>
   );

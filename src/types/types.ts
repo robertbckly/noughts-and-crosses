@@ -1,4 +1,4 @@
-import { PLAYERS } from '../constants/constants';
+import { PLAYERS, THEMES } from '../constants/constants';
 
 export type Player = (typeof PLAYERS)[number];
 
@@ -14,3 +14,5 @@ export type WinnerInfo = {
     squareIndexes: number[];
   };
 };
+
+export type Theme = (typeof THEMES)[number];

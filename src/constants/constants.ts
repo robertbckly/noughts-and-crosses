@@ -7,4 +7,5 @@ export const INIT_SCORING = {
   posDiagonal: 0,
   negDiagonal: 0,
 };
+export const THEMES = ['light', 'dark'] as const;
 export const BASE_TRANSITION_DURATION = 400; // ms
