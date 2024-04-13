@@ -43,6 +43,7 @@ export function Game() {
         />
         <ResetButton isNewGame={isNewGame} onClick={handleReset} />
       </aside>
+
       <main
         ref={boardRef}
         className="relative flex flex-wrap overflow-hidden rounded-sm border-2 border-black dark:border-white"
@@ -68,6 +69,7 @@ export function Game() {
           squareSize={squareSize}
         />
       </main>
+
       <aside className="mt-auto flex justify-end">
         <ThemeButton theme={theme} onChange={setTheme} />
       </aside>
