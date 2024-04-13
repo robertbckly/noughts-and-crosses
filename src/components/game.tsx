@@ -3,6 +3,8 @@ import { WinLine } from './win-line';
 import { useTheme, useElementSizes, useGameLogic } from '../hooks/hooks';
 import { ThemeButton } from './theme-button';
 import { Square } from './square';
+import { StatusMessage } from './status-message';
+import { ResetButton } from './reset-button';
 
 /**
  * TODO:
@@ -34,31 +36,17 @@ export function Game() {
   return (
     <div className="m-auto flex min-h-full max-w-lg flex-col gap-4 p-4">
       <aside className="my-2 flex items-center justify-between gap-2">
-        <p role="alert" className="break-keep text-2xl font-bold">
-          {!winnerInfo && !isGameOver && `It's ${player}'s go`}
-          {!winnerInfo && isGameOver && 'Game over :-('}
-          {!!winnerInfo && (
-            <span className="animate-pulse motion-reduce:animate-none">{`Winner: ${winnerInfo.player}`}</span>
-          )}
-        </p>
-        <button
-          type="button"
-          onClick={handleReset}
-          disabled={isNewGame}
-          className="rounded-md bg-black px-4 py-2 text-white disabled:opacity-50 dark:bg-white dark:text-black"
-        >
-          Reset
-        </button>
+        <StatusMessage
+          isGameOver={isGameOver}
+          player={player}
+          winnerInfo={winnerInfo}
+        />
+        <ResetButton isNewGame={isNewGame} onClick={handleReset} />
       </aside>
       <main
         ref={boardRef}
         className="relative flex flex-wrap overflow-hidden rounded-sm border-2 border-black dark:border-white"
       >
-        <WinLine
-          winnerInfo={winnerInfo}
-          boardSize={boardSize}
-          squareSize={squareSize}
-        />
         {board.map((value, index) => (
           <Square
             // Board squares will never change position in array
@@ -74,6 +62,11 @@ export function Game() {
             onClick={() => handleMove(index)}
           />
         ))}
+        <WinLine
+          winnerInfo={winnerInfo}
+          boardSize={boardSize}
+          squareSize={squareSize}
+        />
       </main>
       <aside className="mt-auto flex justify-end">
         <ThemeButton theme={theme} onChange={setTheme} />
