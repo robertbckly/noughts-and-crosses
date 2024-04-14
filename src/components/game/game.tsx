@@ -1,10 +1,10 @@
 import { useRef } from 'react';
 import { WinLine } from './win-line';
-import { useTheme, useElementSizes, useGameLogic } from '../hooks/hooks';
-import { ThemeButton } from './theme-button';
+import { useTheme, useElementSizes, useGameLogic } from '../../hooks/hooks';
+import { ThemeButton } from '../footer/theme-button';
 import { Square } from './square';
-import { StatusMessage } from './status-message';
-import { ResetButton } from './reset-button';
+import { StatusMessage } from '../header/status-message';
+import { ResetButton } from '../header/reset-button';
 
 /**
  * TODO:
@@ -49,7 +49,7 @@ export function Game() {
 
       <main
         ref={boardRef}
-        aria-label="Game"
+        aria-label="Game board"
         className="relative flex flex-wrap overflow-hidden rounded-sm border-2 border-black dark:border-white"
       >
         {board.map((value, index) => (

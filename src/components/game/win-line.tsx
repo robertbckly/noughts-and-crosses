@@ -1,6 +1,6 @@
 import { useRef } from 'react';
-import { useWinLineAnimation } from '../hooks/use-win-line-animation';
-import { WinnerInfo } from '../types/types';
+import { useWinLineAnimation } from '../../hooks/use-win-line-animation';
+import { WinnerInfo } from '../../types/types';
 
 export type WinLineProps = {
   squareSize: number | null;

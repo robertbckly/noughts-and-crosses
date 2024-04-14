@@ -1,4 +1,4 @@
-import { Player, WinnerInfo } from '../types/types';
+import { Player, WinnerInfo } from '../../types/types';
 
 export type StatusMessageProps = {
   isGameOver: boolean;

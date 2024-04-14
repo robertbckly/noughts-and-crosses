@@ -1,7 +1,7 @@
 import { forwardRef } from 'react';
-import { Player, WinnerInfo } from '../types/types';
-import { getSquareLabel } from '../utils/utils';
-import { BASE_TRANSITION_DURATION, SIZE } from '../constants/constants';
+import { Player, WinnerInfo } from '../../types/types';
+import { getSquareLabel } from '../../utils/utils';
+import { BASE_TRANSITION_DURATION, SIZE } from '../../constants/constants';
 
 export type SquareProps = {
   index: number;

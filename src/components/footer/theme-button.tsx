@@ -1,4 +1,4 @@
-import { Theme } from '../types/types';
+import { Theme } from '../../types/types';
 
 export type ThemeButtonProps = {
   theme: Theme;
