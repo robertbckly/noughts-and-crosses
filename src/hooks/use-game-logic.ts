@@ -1,26 +1,28 @@
 import { useState } from 'react';
 import { Board, Line, Player, WinnerInfo } from '../types/types';
-import {
-  FIRST_PLAYER,
-  INIT_SCORING,
-  PLAYERS,
-  SIZE,
-} from '../constants/constants';
+import { FIRST_PLAYER, PLAYERS } from '../constants/constants';
 import {
   createInitialBoard,
+  createInitialScoring,
   getCoordsFromIndex,
   getIndexesInWinningLine,
 } from '../utils/utils';
 
-export function useGameLogic() {
-  const [board, setBoard] = useState<Board>(createInitialBoard());
+export type UseGameLogicArgs = {
+  boardSize: number;
+};
+
+export function useGameLogic({ boardSize }: UseGameLogicArgs) {
+  const [board, setBoard] = useState<Board>(createInitialBoard({ boardSize }));
   const [player, setPlayer] = useState<Player>(FIRST_PLAYER);
   const [turn, setTurn] = useState(0);
-  const [scoring, setScoring] = useState(structuredClone(INIT_SCORING));
+  const [scoring, setScoring] = useState(
+    structuredClone(createInitialScoring({ boardSize })),
+  );
   const [winnerInfo, setWinnerInfo] = useState<WinnerInfo | null>(null);
 
   const isNewGame = turn === 0;
-  const isGameOver = turn === SIZE * SIZE;
+  const isGameOver = turn === boardSize * boardSize;
 
   function handleMove(index: number) {
     // Fail-safe
@@ -39,7 +41,7 @@ export function useGameLogic() {
 
     // Calculate scoring
     const newScoring = structuredClone(scoring);
-    const [col, row] = getCoordsFromIndex(index);
+    const [col, row] = getCoordsFromIndex({ index, boardSize });
     const playerValue = player === PLAYERS[0] ? -1 : 1;
 
     // ... cols and rows
@@ -52,7 +54,7 @@ export function useGameLogic() {
     }
 
     // ... negative diagonal
-    if (SIZE - col - 1 === row) {
+    if (boardSize - col - 1 === row) {
       newScoring.negDiagonal += playerValue;
     }
 
@@ -60,10 +62,10 @@ export function useGameLogic() {
 
     // Check for winner and calculate info...
 
-    const rowWin = Math.abs(newScoring.rows[row] || 0) === SIZE;
-    const colWin = Math.abs(newScoring.cols[col] || 0) === SIZE;
-    const posDiagWin = Math.abs(newScoring.posDiagonal) === SIZE;
-    const negDiagWin = Math.abs(newScoring.negDiagonal) === SIZE;
+    const rowWin = Math.abs(newScoring.rows[row] || 0) === boardSize;
+    const colWin = Math.abs(newScoring.cols[col] || 0) === boardSize;
+    const posDiagWin = Math.abs(newScoring.posDiagonal) === boardSize;
+    const negDiagWin = Math.abs(newScoring.negDiagonal) === boardSize;
 
     const winLineType: Line | null =
       (rowWin && 'row') ||
@@ -85,6 +87,7 @@ export function useGameLogic() {
           squareIndexes: getIndexesInWinningLine({
             lineType: winLineType,
             lineIndex: winLineIndex,
+            boardSize,
           }),
         },
       });
@@ -92,7 +95,7 @@ export function useGameLogic() {
     }
 
     // If no winner, check if game over
-    if (thisTurn === SIZE * SIZE) {
+    if (thisTurn === boardSize * boardSize) {
       return;
     }
 
@@ -100,11 +103,13 @@ export function useGameLogic() {
     setPlayer(player === PLAYERS[0] ? PLAYERS[1] : PLAYERS[0]);
   }
 
-  function handleReset() {
-    setBoard(createInitialBoard());
+  function handleReset(args?: { newBoardSize: number }) {
+    setBoard(
+      createInitialBoard({ boardSize: args?.newBoardSize || boardSize }),
+    );
     setPlayer(FIRST_PLAYER);
     setTurn(0);
-    setScoring(structuredClone(INIT_SCORING));
+    setScoring(createInitialScoring({ boardSize }));
     setWinnerInfo(null);
   }
 

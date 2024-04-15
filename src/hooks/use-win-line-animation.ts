@@ -1,18 +1,20 @@
 import { MutableRefObject, useEffect } from 'react';
 import { WinnerInfo } from '../types/types';
-import { BASE_TRANSITION_DURATION, SIZE } from '../constants/constants';
+import { BASE_TRANSITION_DURATION } from '../constants/constants';
 import { useMatchMedia } from './use-match-media';
 
 export type UseWinLineAnimationArgs = {
   ref: MutableRefObject<HTMLDivElement | null>;
-  squareSize: number | null;
-  boardSize: number | null;
   winnerInfo: WinnerInfo | null;
+  boardSize: number | null;
+  boardPixelSize: number | null;
+  squarePixelSize: number | null;
 };
 
 export function useWinLineAnimation({
   ref,
-  squareSize,
+  boardPixelSize,
+  squarePixelSize,
   boardSize,
   winnerInfo,
 }: UseWinLineAnimationArgs) {
@@ -20,7 +22,7 @@ export function useWinLineAnimation({
 
   useEffect(() => {
     const line = ref.current;
-    if (!line || !squareSize || !boardSize) {
+    if (!line || !boardPixelSize || !squarePixelSize || !boardSize) {
       return;
     }
 
@@ -33,7 +35,7 @@ export function useWinLineAnimation({
       return;
     }
 
-    const lineMarginX = squareSize * 0.15;
+    const lineMarginX = squarePixelSize * 0.15;
     const lineOffsetY = line.clientHeight / 2;
 
     // Animation (duration is increased for longer diagonal)
@@ -47,7 +49,8 @@ export function useWinLineAnimation({
 
     // Position for row
     if (winnerInfo.line.type === 'row') {
-      const verticalOffset = (boardSize / SIZE) * (0.5 + winnerInfo.line.index);
+      const verticalOffset =
+        (boardPixelSize / boardSize) * (0.5 + winnerInfo.line.index);
       line.style.top = `${verticalOffset - lineOffsetY}px`;
       line.style.left = `${lineMarginX}px`;
     }
@@ -56,7 +59,7 @@ export function useWinLineAnimation({
     if (winnerInfo.line.type === 'col') {
       line.style.transform = 'rotate(90deg)';
       const horizontalOffset =
-        (boardSize / SIZE) * (0.5 + winnerInfo.line.index);
+        (boardPixelSize / boardSize) * (0.5 + winnerInfo.line.index);
       line.style.left = `${horizontalOffset + lineOffsetY}px`;
       line.style.top = `${lineMarginX}px`;
     }
@@ -73,8 +76,15 @@ export function useWinLineAnimation({
     if (winnerInfo.line.type === 'diag-neg') {
       line.style.transform = 'rotate(135deg)';
       line.style.transform += 'scaleX(1.414)';
-      line.style.left = `${boardSize + lineOffsetY - lineMarginX}px`;
+      line.style.left = `${boardPixelSize + lineOffsetY - lineMarginX}px`;
       line.style.top = `${lineMarginX}px`;
     }
-  }, [boardSize, motionDisabled, ref, squareSize, winnerInfo]);
+  }, [
+    boardPixelSize,
+    boardSize,
+    motionDisabled,
+    ref,
+    squarePixelSize,
+    winnerInfo,
+  ]);
 }

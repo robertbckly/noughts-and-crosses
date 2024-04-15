@@ -1,38 +1,43 @@
-import { SIZE } from '../constants/constants';
 import { Line } from '../types/types';
+
+export type GetIndexesInWinningLineArgs = {
+  lineType: Line;
+  lineIndex: number;
+  boardSize: number;
+};
 
 export function getIndexesInWinningLine({
   lineType,
   lineIndex,
-}: {
-  lineType: Line;
-  lineIndex: number;
-}): number[] {
+  boardSize,
+}: GetIndexesInWinningLineArgs): number[] {
   if (lineType === 'row') {
-    const startIndex = lineIndex * SIZE;
-    return [...Array(SIZE)].map((_, arrayIndex) => startIndex + arrayIndex);
+    const startIndex = lineIndex * boardSize;
+    return [...Array(boardSize)].map(
+      (_, arrayIndex) => startIndex + arrayIndex,
+    );
   }
 
   if (lineType === 'col') {
     const indexes = [lineIndex];
-    for (let i = 0; i < SIZE - 1; i += 1) {
-      indexes.push(indexes[i]! + SIZE);
+    for (let i = 0; i < boardSize - 1; i += 1) {
+      indexes.push(indexes[i]! + boardSize);
     }
     return indexes;
   }
 
   if (lineType === 'diag-pos') {
     const indexes = [0];
-    for (let i = 0; i < SIZE - 1; i += 1) {
-      indexes.push(indexes[i]! + SIZE + 1);
+    for (let i = 0; i < boardSize - 1; i += 1) {
+      indexes.push(indexes[i]! + boardSize + 1);
     }
     return indexes;
   }
 
   if (lineType === 'diag-neg') {
-    const indexes = [SIZE - 1];
-    for (let i = 0; i < SIZE - 1; i += 1) {
-      indexes.push(indexes[i]! + SIZE - 1);
+    const indexes = [boardSize - 1];
+    for (let i = 0; i < boardSize - 1; i += 1) {
+      indexes.push(indexes[i]! + boardSize - 1);
     }
     return indexes;
   }

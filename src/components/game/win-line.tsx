@@ -3,7 +3,8 @@ import { useWinLineAnimation } from '../../hooks/use-win-line-animation';
 import { WinnerInfo } from '../../types/types';
 
 export type WinLineProps = {
-  squareSize: number | null;
+  boardPixelSize: number | null;
+  squarePixelSize: number | null;
   boardSize: number | null;
   winnerInfo: WinnerInfo | null;
 };
@@ -12,9 +13,20 @@ export type WinLineProps = {
  * Animated win line.
  * Note: this expects to be inside a positioning context (i.e. a positioned element).
  */
-export function WinLine({ squareSize, boardSize, winnerInfo }: WinLineProps) {
+export function WinLine({
+  boardPixelSize,
+  squarePixelSize,
+  boardSize,
+  winnerInfo,
+}: WinLineProps) {
   const ref = useRef<HTMLDivElement | null>(null);
-  useWinLineAnimation({ ref, squareSize, boardSize, winnerInfo });
+  useWinLineAnimation({
+    ref,
+    boardPixelSize,
+    squarePixelSize,
+    boardSize,
+    winnerInfo,
+  });
 
   return (
     <div

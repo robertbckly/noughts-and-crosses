@@ -1,6 +1,12 @@
-import { SIZE } from '../constants/constants';
+export type GetCoordsFromIndexArgs = {
+  index: number;
+  boardSize: number;
+};
 
-export function getCoordsFromIndex(index: number): [number, number] {
+export function getCoordsFromIndex({
+  index,
+  boardSize,
+}: GetCoordsFromIndexArgs): [number, number] {
   // [col, row]
-  return [index % SIZE, Math.floor(index / SIZE)];
+  return [index % boardSize, Math.floor(index / boardSize)];
 }
