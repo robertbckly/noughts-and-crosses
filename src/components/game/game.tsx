@@ -9,7 +9,6 @@ import { INIT_SIZE, SIZES } from '../../constants/constants';
 
 /**
  * TODO:
- *  - Add dynamic board size control (just for fun)
  *  - Test in other browsers / OSs
  */
 
@@ -37,7 +36,7 @@ export function Game() {
   const [theme, setTheme] = useTheme();
 
   return (
-    <div className="m-auto flex min-h-full max-w-lg flex-col gap-4 p-4">
+    <div className="m-auto flex min-h-full max-w-lg flex-col gap-4 p-4 pb-6">
       <aside
         aria-label="Info and reset"
         className="my-2 flex items-center justify-between gap-2"
@@ -81,7 +80,7 @@ export function Game() {
 
       <aside
         aria-label="Settings"
-        className="mt-auto flex flex-wrap justify-between text-sm font-bold opacity-80"
+        className="mt-auto flex flex-wrap justify-between text-sm font-bold"
       >
         <label
           htmlFor="grid-size-select"

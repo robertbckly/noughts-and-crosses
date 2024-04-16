@@ -20,7 +20,7 @@ export const Square = forwardRef<HTMLButtonElement, SquareProps>(
       onClick={onClick}
       disabled={Boolean(value || winnerInfo)}
       aria-label={getSquareLabel({ index, boardSize, value })}
-      className="aspect-square overflow-hidden border-2 border-black font-bold leading-none transition-colors ease-linear motion-reduce:transition-none dark:border-white dark:text-white"
+      className="aspect-square overflow-hidden border-2 border-black font-bold leading-none transition-[background] ease-linear motion-reduce:transition-none dark:border-white dark:text-white"
       style={{
         width: `${(1 / boardSize) * 100}%`,
         fontSize: pixelSize ? `${pixelSize * 0.8}px` : '1rem',
