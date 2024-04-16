@@ -13,12 +13,10 @@ export type UseGameLogicArgs = {
 };
 
 export function useGameLogic({ boardSize }: UseGameLogicArgs) {
-  const [board, setBoard] = useState<Board>(createInitialBoard({ boardSize }));
+  const [board, setBoard] = useState<Board>(createInitialBoard(boardSize));
   const [player, setPlayer] = useState<Player>(FIRST_PLAYER);
   const [turn, setTurn] = useState(0);
-  const [scoring, setScoring] = useState(
-    structuredClone(createInitialScoring({ boardSize })),
-  );
+  const [scoring, setScoring] = useState(createInitialScoring(boardSize));
   const [winnerInfo, setWinnerInfo] = useState<WinnerInfo | null>(null);
 
   const isNewGame = turn === 0;
@@ -104,12 +102,10 @@ export function useGameLogic({ boardSize }: UseGameLogicArgs) {
   }
 
   function handleReset(args?: { newBoardSize: number }) {
-    setBoard(
-      createInitialBoard({ boardSize: args?.newBoardSize || boardSize }),
-    );
+    setBoard(createInitialBoard(args?.newBoardSize || boardSize));
     setPlayer(FIRST_PLAYER);
     setTurn(0);
-    setScoring(createInitialScoring({ boardSize }));
+    setScoring(createInitialScoring(boardSize));
     setWinnerInfo(null);
   }
 

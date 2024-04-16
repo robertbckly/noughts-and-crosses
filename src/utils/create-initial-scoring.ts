@@ -1,8 +1,4 @@
-export type CreateInitialScoringArgs = {
-  boardSize: number;
-};
-
-export function createInitialScoring({ boardSize }: CreateInitialScoringArgs) {
+export function createInitialScoring(boardSize: number) {
   return {
     rows: Array<number>(boardSize).fill(0),
     cols: Array<number>(boardSize).fill(0),
