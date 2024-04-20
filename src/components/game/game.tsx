@@ -1,11 +1,12 @@
 import { useRef, useState } from 'react';
-import { WinLine } from './win-line';
+import { INIT_SIZE } from '../../constants/constants';
 import { useTheme, useElementSizes, useGameLogic } from '../../hooks/hooks';
-import { ThemeButton } from '../footer/theme-button';
-import { Square } from './square';
 import { StatusMessage } from '../header/status-message';
 import { ResetButton } from '../header/reset-button';
-import { INIT_SIZE, SIZES } from '../../constants/constants';
+import { SizeSelect } from '../footer/size-select';
+import { ThemeButton } from '../footer/theme-button';
+import { Square } from './square';
+import { WinLine } from './win-line';
 
 /**
  * TODO:
@@ -26,11 +27,13 @@ export function Game() {
 
   // Track board & square sizes in order to adjust font size
   const boardRef = useRef<HTMLElement | null>(null);
-  const firstSquareRef = useRef<HTMLButtonElement | null>(null);
+  const [firstSquare, setFirstSquare] = useState<HTMLButtonElement | null>(
+    null,
+  );
   const { boardSize: boardPixelSize, squareSize: squarePixelSize } =
     useElementSizes({
       boardRef,
-      squareRef: firstSquareRef,
+      squareElement: firstSquare,
     });
 
   const [theme, setTheme] = useTheme();
@@ -56,12 +59,12 @@ export function Game() {
       >
         {board.map((value, index) => (
           <Square
-            // Board squares will never change position in array
-            // (NOTE: unless board size is made dynamic)
+            // Items in `board` array have constant indexes for each
+            // `boardSize` value. Can safely ignore lint error.
             // eslint-disable-next-line react/no-array-index-key
-            key={index}
-            // Add ref only to first square
-            ref={index === 0 ? firstSquareRef : undefined}
+            key={`${boardSize}-${index}`}
+            // Add ref only to first square (callback-style to make it reactive)
+            ref={index === 0 ? setFirstSquare : undefined}
             index={index}
             value={value}
             boardSize={boardSize}
@@ -82,28 +85,13 @@ export function Game() {
         aria-label="Settings"
         className="mt-auto flex flex-wrap justify-between text-sm font-bold"
       >
-        <label
-          htmlFor="grid-size-select"
-          className="flex items-center gap-2"
-          style={{ opacity: isNewGame ? 1 : 0.5 }}
-        >
-          Grid size
-          <select
-            id="grid-size-select"
-            disabled={!isNewGame}
-            className="cursor-pointer appearance-none rounded border-none bg-black px-2 py-1 font-normal leading-none text-white disabled:cursor-default dark:bg-white dark:text-black"
-            onChange={(e) => {
-              const newBoardSize = Number(e.target.value);
-              setBoardSize(newBoardSize);
-              handleReset({ newBoardSize });
-            }}
-          >
-            {SIZES.map((size) => (
-              <option key={size} value={size}>{`${size}x${size}`}</option>
-            ))}
-          </select>
-        </label>
-
+        <SizeSelect
+          isNewGame={isNewGame}
+          onChange={(newBoardSize) => {
+            setBoardSize(newBoardSize);
+            handleReset({ newBoardSize });
+          }}
+        />
         <ThemeButton theme={theme} onChange={setTheme} />
       </aside>
     </div>
