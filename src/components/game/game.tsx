@@ -8,11 +8,6 @@ import { ThemeButton } from '../footer/theme-button';
 import { Square } from './square';
 import { WinLine } from './win-line';
 
-/**
- * TODO:
- *  - Test in other browsers / OSs
- */
-
 export function Game() {
   const [boardSize, setBoardSize] = useState<number>(INIT_SIZE);
   const {
