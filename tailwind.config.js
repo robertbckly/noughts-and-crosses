@@ -7,6 +7,9 @@ module.exports = {
       fontFamily: {
         sans: ['DM Sans', 'sans-serif'],
       },
+      transformOrigin: {
+        'center-left': 'center left',
+      },
     },
   },
   plugins: [],

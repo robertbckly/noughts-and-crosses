@@ -1,7 +1,10 @@
 import { MutableRefObject, useEffect } from 'react';
 import { WinnerInfo } from '../types/types';
-import { BASE_TRANSITION_DURATION } from '../constants/constants';
 import { useMatchMedia } from './use-match-media';
+import { BASE_TRANSITION_DURATION } from '../constants/constants';
+
+// Approx. ratio of square-diagonal to square-side length
+const DIAG_SCALE = 1.4142;
 
 export type UseWinLineAnimationArgs = {
   ref: MutableRefObject<HTMLDivElement | null>;
@@ -40,7 +43,7 @@ export function useWinLineAnimation({
 
     // Animation (duration is increased for longer diagonal)
     const duration = winnerInfo.line.type.includes('diag')
-      ? BASE_TRANSITION_DURATION * 1.42
+      ? BASE_TRANSITION_DURATION * DIAG_SCALE
       : BASE_TRANSITION_DURATION;
     line.style.width = `calc(100% - ${lineMarginX * 2}px`;
     line.style.transition = !motionDisabled
@@ -60,24 +63,25 @@ export function useWinLineAnimation({
       line.style.transform = 'rotate(90deg)';
       const horizontalOffset =
         (boardPixelSize / boardSize) * (0.5 + winnerInfo.line.index);
-      line.style.left = `${horizontalOffset + lineOffsetY}px`;
-      line.style.top = `${lineMarginX}px`;
+      line.style.left = `${horizontalOffset}px`;
+      line.style.top = `${lineMarginX - lineOffsetY}px`;
     }
 
     // Position for positive diagonal
     if (winnerInfo.line.type === 'diag-pos') {
+      line.style.width = `${(boardPixelSize - lineMarginX * 2) * DIAG_SCALE}px`;
       line.style.transform = 'rotate(45deg)';
-      line.style.transform += 'scaleX(1.414)';
-      line.style.left = `${lineOffsetY + lineMarginX}px`;
-      line.style.top = `${lineMarginX}px`;
+      line.style.left = `${lineMarginX}px`;
+      line.style.top = `${-lineOffsetY + lineMarginX}px`;
     }
 
     // Position for negative diagonal
     if (winnerInfo.line.type === 'diag-neg') {
+      line.style.width = `${(boardPixelSize - lineMarginX * 2) * DIAG_SCALE}px`;
+      // Purposefully not `-45deg` in order to animate correctly
       line.style.transform = 'rotate(135deg)';
-      line.style.transform += 'scaleX(1.414)';
-      line.style.left = `${boardPixelSize + lineOffsetY - lineMarginX}px`;
-      line.style.top = `${lineMarginX}px`;
+      line.style.left = `${boardPixelSize - lineMarginX}px`;
+      line.style.top = `${-lineOffsetY + lineMarginX}px`;
     }
   }, [
     boardPixelSize,
