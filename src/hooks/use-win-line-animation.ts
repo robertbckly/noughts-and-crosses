@@ -40,44 +40,48 @@ export function useWinLineAnimation({
 
     const lineMarginX = squarePixelSize * 0.15;
     const lineOffsetY = line.clientHeight / 2;
+    const rowColOffset =
+      (boardPixelSize / boardSize) * (winnerInfo.line.index + 0.5);
 
     // Animation (duration is increased for longer diagonal)
-    const duration = winnerInfo.line.type.includes('diag')
+    const durationMs = winnerInfo.line.type.includes('diag')
       ? BASE_TRANSITION_DURATION * DIAG_SCALE
       : BASE_TRANSITION_DURATION;
-    line.style.width = `calc(100% - ${lineMarginX * 2}px`;
+
     line.style.transition = !motionDisabled
-      ? `width ${duration}ms ease-in-out`
+      ? `width ${durationMs}ms ease-in-out`
       : '';
+
+    line.style.width = `calc(100% - ${lineMarginX * 2}px`;
 
     // Position for row
     if (winnerInfo.line.type === 'row') {
-      const verticalOffset =
-        (boardPixelSize / boardSize) * (0.5 + winnerInfo.line.index);
-      line.style.top = `${verticalOffset - lineOffsetY}px`;
+      line.style.top = `${rowColOffset - lineOffsetY}px`;
       line.style.left = `${lineMarginX}px`;
+      return;
     }
 
     // Position for column
     if (winnerInfo.line.type === 'col') {
       line.style.transform = 'rotate(90deg)';
-      const horizontalOffset =
-        (boardPixelSize / boardSize) * (0.5 + winnerInfo.line.index);
-      line.style.left = `${horizontalOffset}px`;
+      line.style.left = `${rowColOffset}px`;
       line.style.top = `${lineMarginX - lineOffsetY}px`;
+      return;
     }
+
+    // Adjust width for longer diagonals
+    line.style.width = `${(boardPixelSize - lineMarginX * 2) * DIAG_SCALE}px`;
 
     // Position for positive diagonal
     if (winnerInfo.line.type === 'diag-pos') {
-      line.style.width = `${(boardPixelSize - lineMarginX * 2) * DIAG_SCALE}px`;
       line.style.transform = 'rotate(45deg)';
       line.style.left = `${lineMarginX}px`;
       line.style.top = `${-lineOffsetY + lineMarginX}px`;
+      return;
     }
 
     // Position for negative diagonal
     if (winnerInfo.line.type === 'diag-neg') {
-      line.style.width = `${(boardPixelSize - lineMarginX * 2) * DIAG_SCALE}px`;
       // Purposefully not `-45deg` in order to animate correctly
       line.style.transform = 'rotate(135deg)';
       line.style.left = `${boardPixelSize - lineMarginX}px`;
