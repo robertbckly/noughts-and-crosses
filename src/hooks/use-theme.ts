@@ -9,7 +9,7 @@ const isTheme = (string: string): string is Theme =>
   (THEMES as readonly string[]).includes(string);
 
 export function useTheme() {
-  const [preference, setPreference] = useState<Theme | null>();
+  const [preference, setPreference] = useState<Theme | null>(null);
   const systemTheme: Theme = useMatchMedia('(prefers-color-scheme: light)')
     ? 'light'
     : 'dark';
